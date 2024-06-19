@@ -277,7 +277,7 @@ obniz.onconnect = async function () {
             other.textContent = "リーチ"
             centerTimer = setInterval(() => {
                 countupNumber(1)
-                if (lotteryCont > 5 && numElements[1].textContent == (parseInt(numElements[0].textContent)) % 9) {
+                if (lotteryCont > 5 && numElements[1].textContent == (parseInt(numElements[0].textContent)) ) {
                     clearInterval(centerTimer)
                     isSpin = false;
                     changeNumsFontColor("black")
