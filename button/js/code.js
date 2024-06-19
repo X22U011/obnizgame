@@ -88,7 +88,7 @@ function startSpin() {
 //当たりかどうかの判定
 function selectJackpot() {
     console.log("セレクトジャックポット開始")
-    var select = getIntRandom(0);
+    var select = getIntRandom(319);
     if (select == 1) {
         isJackpot = true;
     } else {
@@ -101,7 +101,7 @@ function selectJackpot() {
 function selectJackpotLottery() {
     reachNum = getIntRandom(9);
     console.log("セレクトジャックポット演出開始")
-    if (getIntRandom(0) == 1) {
+    if (getIntRandom(1000) == 1) {
         console.log("前回店")
         fullSpin();
     } else if (getIntRandom(100) == 1) {
