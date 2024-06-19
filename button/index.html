@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html id="html">
-<head >
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://unpkg.com/obniz@3.x/obniz.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/index.css">
 </head>
+
 <body>
     <h1></h1>
     <div id="rotate">回転数:0</div>
-    <div id ="jackpot">当たり:0</div>
+    <div id="jackpot">当たり:0</div>
     <div class="num">1</div>
     <div class="num">1</div>
     <div class="num">1</div>
 
-    <div id = "other"></div>
+    <div id="other"></div>
 
     <button onclick="clickButton()" id="button">回転</button>
+    <br>
+    <br>
+    <br>
+    <div id="probability">
+
+        <p>当たり確率</p>
+        <p>1/<input id="jackpotProbability" value="319" type="text"></p>
+        <br><br>
+        <p>当たり時の演出操作</p>
+        <p>全回転確率</p>
+        <p>1/<input id="fullSpinProbability" value="10000" type="text"></p>
+        <p>ピタ止め(全回転優先)</p>
+        <p>1/<input id="bitaProbability" value="100" type="text"></p>
+        
+    </div>
     <script src="js/code.js"></script>
 </body>
+
 </html>
