@@ -10,6 +10,15 @@ let numElements = document.getElementsByClassName("num");
 var rotate = document.getElementById("rotate");
 //当たり数
 var jackpot = document.getElementById("jackpot");
+
+//確率操作用
+var jackpotProbabilityText = document.getElementById("jackpotProbability")
+var fullSpinProbabilityText = document.getElementById("fullSpinProbability")
+var bitaProbabilityText = document.getElementById("bitaProbability")
+var jackpotProbability = 319
+var fullSpinProbability = 10000
+var bitaProbability = 100
+
 //回転数のカウント
 var rotateCont = 0;
 //当たった数のカウント
@@ -88,7 +97,7 @@ function startSpin() {
 //当たりかどうかの判定
 function selectJackpot() {
     console.log("セレクトジャックポット開始")
-    var select = getIntRandom(319);
+    var select = getIntRandom(jackpotProbability);
     if (select == 1) {
         isJackpot = true;
     } else {
@@ -101,11 +110,12 @@ function selectJackpot() {
 function selectJackpotLottery() {
     reachNum = getIntRandom(9);
     console.log("セレクトジャックポット演出開始")
-    if (getIntRandom(1000) == 1) {
-        console.log("前回店")
+    if (getIntRandom(fullSpinProbability) == 1) {
+        console.log("全回店")
         fullSpin();
-    } else if (getIntRandom(100) == 1) {
+    } else if (getIntRandom(bitaProbability) == 1) {
         console.log("びた")
+        selectChangeColor();
         bita();
     } else if (getIntRandom(0) == 1) {
         console.log("リーチ当たり")
@@ -137,16 +147,7 @@ function getIntRandom(num) {
 
 function missReach() {
     console.log("外れリーチ")
-    let color = "black"
-
-    if (getIntRandom(5) == 1) {
-        color = "blue"
-    } else if (getIntRandom(7) == 1) {
-        color = "green"
-    } else if (getIntRandom(10) == 1) {
-        color = "red"
-    }
-    changeNumsFontColor(color)
+    selectChangeColor();
     do {
         reachNum = getIntRandom(9);
     } while (reachNum == 7);
@@ -157,22 +158,41 @@ function missReach() {
 
 function jackpotReach() {
     console.log("当たりリーチ")
-    let color = "red"
-
-    if (getIntRandom(30) == 1) {
-        color = "black"
-    } else if (getIntRandom(20) == 1) {
-        color = "blue"
-    } else if (getIntRandom(10) == 1) {
-        color = "green"
-    }
-    changeNumsFontColor(color)
+    selectChangeColor();
     do {
         reachNum = getIntRandom(9);
     } while (reachNum == 7);
     stopReachSide(1000);
     stopJackpotCenter(1000)
 }
+
+function selectChangeColor() {
+    let color = "red"
+    let tmp = getIntRandom(1000)
+    if (isJackpot) {
+        if (tmp > 950) {
+            color = "black"
+        } else if (tmp > 800) {
+            color = "blue"
+        } else if (tmp > 600) {
+            color = "green"
+        }
+
+    } else {
+        if (950 > tmp) {
+            color = "black"
+        } else if (800 > tmp) {
+            color = "blue"
+        } else if (600 > tmp) {
+            color = "green"
+        }
+    }
+    changeNumsFontColor(color)
+
+}
+
+
+
 
 //左右を止める(通常)
 function stopNormalSide(msecond) {
@@ -244,12 +264,12 @@ function stopJackpotCenter(msecond) {
         other.textContent = "リーチ"
         centerTimer = setInterval(() => {
             countupNumber(1)
-            if (lotteryCont > 5 && numElements[1].textContent == (parseInt(numElements[0].textContent)) % 9) {
+            if (lotteryCont > 5 && numElements[1].textContent == (parseInt(numElements[0].textContent))) {
                 clearInterval(centerTimer)
                 isSpin = false;
                 changeNumsFontColor("black")
                 updateJackpot();
-                other.textContent="あたり"
+                other.textContent = "あたり"
             }
         }, msecond);
     }, msecond + 800);
@@ -306,7 +326,7 @@ function countupNumber(index) {
 function fullSpin() {
     reachNum = 7;
     setTimeout(() => {
-        console.log("前回店")
+        console.log("全回店")
         clearInterval(leftTimer);
         clearInterval(centerTimer);
         clearInterval(rightTimer);
@@ -328,6 +348,8 @@ function fullSpin() {
         let button = document.getElementById("button")
         html.style.backgroundColor = "black"
         button.style.visibility = "hidden"
+        let probability = document.getElementById("probability")
+        probability.style.visibility = "hidden"
         other.textContent = "おめでとう"
         let colorNum = 0;
         let timeCount = -30
@@ -336,7 +358,7 @@ function fullSpin() {
                 colorNum == 255;
             }
             html.style.backgroundColor = "rgb(" + colorNum + "," + colorNum + "," + colorNum + ")";
-            if(timeCount>0){
+            if (timeCount > 0) {
                 colorNum += 1;
             }
             timeCount++;
@@ -348,7 +370,10 @@ function fullSpin() {
             clearInterval(changeWhite);
             updateJackpot()
             html.style.backgroundColor = "white"
+            probability.style.visibility = ""
             button.style.visibility = ""
+            jackpotProbabilityText.style.visibility = ""
+            fullSpinProbabilityText.style.visibility = ""
             other.textContent = "おめでとう"
             isSpin = false;
         }, 9000)
@@ -359,7 +384,7 @@ function fullSpin() {
 function bita() {
     console.log("びた開始")
     stopReachSide(1000)
-    stopBitaJackpotCenter(1000);
+    stopBitaJackpotCenter(1800);
 }
 
 function updateJackpot() {
@@ -367,3 +392,19 @@ function updateJackpot() {
     jackpotCont++
     jackpot.textContent = "あたり:" + jackpotCont
 }
+
+
+jackpotProbabilityText.addEventListener("input", function () {
+    console.log("jackpotProbability変更")
+    jackpotProbability = parseInt(jackpotProbabilityText.value) - 1
+})
+
+fullSpinProbabilityText.addEventListener("input", function () {
+    console.log("fullSpinProbability変更")
+    fullSpinProbability = parseInt(fullSpinProbabilityText.value) - 1
+})
+
+bitaProbabilityText.addEventListener("input", function () {
+    console.log("bitaProbability変更")
+    bitaProbability = parseInt(bitaProbabilityText.value) - 1
+})
